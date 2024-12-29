@@ -1,0 +1,180 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the structure for an employee node
+typedef struct Node {
+	int SSN;
+	int salary;
+	char name[30];
+	char dept[30];
+	char designation[30];
+	char phno[15];
+	struct Node *prev;
+	struct Node *next;
+} Node;
+
+// Function to create a new node
+Node* createNode() {
+	Node *newNode = (Node *)malloc(sizeof(Node));
+	scanf("%d",&newNode->SSN);
+	scanf("%s", newNode->name);
+	scanf("%s",newNode->dept);
+	scanf("%s", newNode->designation);
+	scanf("%d", &newNode->salary);
+	scanf("%s", newNode->phno);
+	newNode->next = NULL;
+	newNode->prev = NULL;
+	return newNode;
+}
+
+// Function to insert a node at the end of the DLL
+void insertAtEnd(Node** head, Node** tail) {
+	Node* newNode = createNode();
+	if(*head == NULL){
+		*head = newNode;
+		*tail = newNode;
+	}else{
+		(*tail)->next = newNode;
+		newNode->prev = *tail;
+		*tail = newNode;
+	}
+}
+
+// Function to display the DLL and count the number of nodes
+void displayDLL(Node* head) {
+	Node *temp = head;
+	int count = 0;
+	while(temp != NULL){
+		printf("Name: %s ",temp->name);
+		count++;
+		temp = temp->next;
+	}
+	printf("Number of nodes: %d\n", count);
+}
+
+// Function to insert a node at the front of the DLL
+void insertAtFront(Node** head, Node** tail) {
+	Node* newNode = createNode();
+	if(*head == NULL){
+		*head = newNode;
+		*tail = newNode;
+	}
+	if(*head != NULL){
+		newNode->next = *head;
+		(*head)->prev = newNode;
+		*head = newNode;
+	}
+}
+
+// Function to delete a node from the end of the DLL
+void deleteAtEnd(Node** head, Node** tail) {
+	if(*tail == NULL) return;
+	Node *temp = *tail;
+	*tail = (*tail)->prev;
+	if(*tail!= NULL) (*tail)->next = NULL;
+	else *head = NULL;
+	free(temp);
+}
+
+// Function to delete a node from the front of the DLL
+void deleteAtFront(Node** head, Node** tail) {
+	if(*head == NULL) return;
+	Node* temp = *head;
+	*head = (*head)->next;
+	if(*head!= NULL){
+		(*head)->prev = NULL;
+	}
+	else{
+		 *tail = NULL;
+	}
+	free(temp);
+}
+
+// DEQ Operations
+
+// Enqueue Front
+void enqueueFront(Node** head, Node** tail) {
+	Node * newNode = createNode();
+	insertAtFront(head, tail);
+}
+
+// Enqueue Back
+void enqueueBack(Node** head, Node** tail) {
+	Node *newNode = createNode();
+	insertAtEnd(head, tail);
+}
+
+// Dequeue Front
+void dequeueFront(Node** head, Node** tail) {
+	deleteAtFront(head, tail);
+}
+
+// Dequeue Back
+void dequeueBack(Node** head, Node** tail) {
+	deleteAtEnd(head, tail);
+}
+
+int main() {
+    Node* head = NULL;
+    Node* tail = NULL;
+    int choice,n;
+    while (1) {
+        printf("Menu:\n");
+        printf("1. Create DLL of N Employees Data\n");
+        printf("2. Display the status of DLL and count the number of nodes\n");
+        printf("3. Perform Insertion at End of DLL\n");
+        printf("4. Perform Insertion at Front of DLL\n");
+        printf("5. Perform Deletion at End of DLL\n");
+        printf("6. Perform Deletion at Front of DLL\n");
+        printf("7. Enqueue Front (DEQ)\n");
+        printf("8. Enqueue Back (DEQ)\n");
+        printf("9. Dequeue Front (DEQ)\n");
+        printf("10. Dequeue Back (DEQ)\n");
+        printf("11. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                
+                printf("Enter the number of employees: ");
+                scanf("%d", &n);
+                for (int i = 0; i < n; i++) {
+                    insertAtEnd(&head, &tail);
+                }
+                break;
+            case 2:
+                displayDLL(head);
+                break;
+            case 3:
+                insertAtEnd(&head, &tail);
+                break;
+            case 4:
+                insertAtFront(&head, &tail);
+                break;
+            case 5:
+                deleteAtEnd(&head, &tail);
+                break;
+            case 6:
+                deleteAtFront(&head, &tail);
+                break;
+            case 7:
+                enqueueFront(&head, &tail);
+                break;
+            case 8:
+                enqueueBack(&head, &tail);
+                break;
+            case 9:
+                dequeueFront(&head, &tail);
+                break;
+            case 10:
+                dequeueBack(&head, &tail);
+                break;
+            case 11:
+                exit(0);
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
