@@ -103,7 +103,7 @@ void main() {
 					else
 						printf("Element found in the binary search tree.\n");
 					break;
-			case 6:
+			case 6:		printf("Exit successfully");
 					exit(0);
 		}
 	}
