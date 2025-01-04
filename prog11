@@ -92,7 +92,7 @@ void main() {
 					else {
 						printf("Elements of the BST (post-order traversal): ");
 						postorderInBST(root);
-						printf("\n");
+						printf("\n\n");
 						}
 					break;
 			case 5: 
