@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#define STACK_MAX_SIZE 20
+char stack[STACK_MAX_SIZE];
+int top = -1;
+
+int isEmpty() { 
+    return top == -1; 
+}
+void push(char x) {
+    stack[++top] = x;
+}
+char pop() {
+    if (isEmpty()) return '\0';
+    else return stack[top--];
+}
+int priority(char x) {
+    if (x == '*' || x == '/' || x == '%' || x == '^') return 2;
+    else if (x == '+' || x == '-') return 1;
+    else return 0;
+}
+void convertInfix(char *s) {
+    int len = strlen(s), j = 0;
+    char res[len + 1];
+    for (int i = 0; i < len; i++) {
+        if (isalnum(s[i])) res[j++] = s[i];
+        else if (s[i] == '(') push(s[i]);
+        else if (s[i] == ')') {
+            while (!isEmpty() && stack[top] != '(') res[j++] = pop();
+            if (!isEmpty()) pop();
+            else { printf("unbalanced parenthesis.\n"); return; }
+        } else if (strchr("+-*/%^", s[i])) {
+            while (!isEmpty() && priority(s[i]) <= priority(stack[top])) res[j++] = pop();
+            push(s[i]);
+        } else {
+            printf("Only alphanumeric and { '+', '-','*', '%%', '/', '^' } are allowed.\n");
+            return;
+        }
+    }
+    while (!isEmpty()) {
+        if (stack[top] == '(') { 
+            printf("unbalanced parenthesis.\n"); 
+            return; 
+        }
+        res[j++] = pop();
+    }
+    res[j] = '\0';
+    printf("Postfix expression: %s\n", res);
+}
+
+int main() {
+    char exp[20];
+    printf("Enter the expression: ");
+    scanf("%s", exp);
+    convertInfix(exp);
+    return 0;
+}
