@@ -61,42 +61,23 @@ void main() {
 		printf("Enter your option: ");
 		scanf("%d", &op);
 		switch(op) {
-			case 1:	printf("Enter an element to be inserted : ");
+			case 1:		printf("Enter an element to be inserted : ");
 					scanf("%d", &x);
 					root = insertNodeInBST(root,x);
 					break;
-			case 2:
-					if(root == NULL) {
-						printf("Binary Search Tree is empty.\n");
-					}
-					else {
-						printf("Elements of the BST (in-order traversal): ");
-						inorderInBST(root);
-						printf("\n");
-					}
+			case 2:		printf("Elements of the BST (in-order traversal): ");
+					inorderInBST(root);
+					printf("\n");
 					break;
-			case 3:
-					if(root == NULL) {
-						printf("Binary Search Tree is empty.\n");
-					}
-					else {
-						printf("Elements of the BST (pre-order traversal): ");
-						preorderInBST(root);
-						printf("\n");
-						}
+			case 3:		printf("Elements of the BST (pre-order traversal): ");
+					preorderInBST(root);
+					printf("\n");
 					break;
-			case 4:
-					if(root == NULL) {
-						printf("Binary Search Tree is empty.\n");
-					}
-					else {
-						printf("Elements of the BST (post-order traversal): ");
-						postorderInBST(root);
-						printf("\n\n");
-						}
+			case 4:		printf("Elements of the BST (post-order traversal): ");
+					postorderInBST(root);
+					printf("\n\n");
 					break;
-			case 5: 
-					printf("Enter an element to be searched : ");
+			case 5:		printf("Enter an element to be searched : ");
 					scanf("%d", &x);
 					if( searchNodeInBST(root,x) == NULL) 
 						printf("Element not found in the binary search tree.\n");
