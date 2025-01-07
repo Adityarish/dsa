@@ -1,0 +1,44 @@
+#include <stdio.h>
+int main() {
+    int arr[100], n, ind, choice, x, isRunning = 1;
+    printf("Enter size: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (int i = 0; i < n; i++) scanf("%d", &arr[i]);
+    while (isRunning) {
+        printf("\n1. Insert\n2. Delete\n3. Display\n4. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+          case 1:  printf("Enter number and location: ");
+                scanf("%d%d", &x, &ind);
+                if (ind < 0 || ind > n) 
+                    printf("Invalid location\n");
+                else { 
+                    for (int i = n; i > ind; i--) 
+                        arr[i] = arr[i - 1];
+                    arr[ind] = x; 
+                    n++; 
+                } 
+                break;
+         case 2: printf("Enter location: ");
+                scanf("%d", &ind);
+                if (ind < 0 || ind >= n) 
+                    printf("Invalid location\n");
+                else { 
+                    for (int i = ind; i < n - 1; i++) 
+                        arr[i] = arr[i + 1];
+                    n--; 
+                }
+                break;
+        case 3: printf("Array: ");
+                for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+                printf("\n");
+                break;
+            case 4: 
+                isRunning = 0; 
+                break;
+        default: 
+                printf("Invalid input\n");
+        }
+    }
+    return 0;
+}
