@@ -1,24 +1,23 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-struct Node {
-    int coeff, degree;
-    struct Node* next;
+struct Node{
+    int coeff, deg;
+    struct Node *next;
 };
-
 typedef struct Node* Poly;
 
-Poly createNode(int coeff, int degree) {
-    Poly newNode = (Poly)malloc(sizeof(struct Node));
+Poly create(int coeff, int deg){
+    Poly newNode = (struct Node *)malloc(sizeof(struct Node));
     newNode->coeff = coeff;
-    newNode->degree = degree;
+    newNode->deg = deg;
     newNode->next = NULL;
     return newNode;
 }
 
-Poly insertNode(Poly tail, int coeff, int degree) {
-    Poly newNode = createNode(coeff, degree);
-    if (tail == NULL) {
+Poly insert(Poly tail, int coeff, int deg){
+    Poly newNode = create(coeff, deg);
+    if(tail == NULL){
         newNode->next = newNode;
         return newNode;
     }
@@ -27,67 +26,62 @@ Poly insertNode(Poly tail, int coeff, int degree) {
     return newNode;
 }
 
-Poly inputPoly(int n) {
-    int coeff, degree;
+Poly input(int n){
+    int coeff, deg;
     Poly tail = NULL;
-    for (int i = 0; i < n; i++) {
-        scanf("%d %d", &coeff, &degree);
-        tail = insertNode(tail, coeff, degree);
+    for(int i = 0;i<n;i++){
+    scanf("%d %d",&coeff, &deg);
+    tail = insert(tail, coeff, deg);
     }
     return tail->next;
 }
 
-void displayPoly(Poly head) {
-    if (head) {
+void display(Poly head){
+    if(head){
         Poly temp = head;
-        do {
-            printf("%dx^%d", temp->coeff, temp->degree);
+        do{
+            printf("%dx^%d", temp->coeff, temp->deg);
             temp = temp->next;
-            if (temp != head) printf(" + ");
-        } while (temp != head);
+            if(temp != head) printf(" + ");
+        }while(temp != head);
     }
     printf("\n");
 }
 
-Poly addPoly(Poly head1, Poly head2) {
+Poly add(Poly head1, Poly head2){
     Poly resTail = NULL, mover1 = head1, mover2 = head2;
-    do {
-        if (mover1->degree == mover2->degree) {
-            resTail = insertNode(resTail, mover1->coeff + mover2->coeff, mover1->degree);
+    do{
+        if(mover1->deg == mover2->deg){
+            resTail = insert(resTail, mover1->coeff+mover2->coeff, mover1->deg);
             mover1 = mover1->next;
             mover2 = mover2->next;
-        } else if (mover1->degree > mover2->degree) {
-            resTail = insertNode(resTail, mover1->coeff, mover1->degree);
+        }else if(mover1->deg > mover2 ->deg){
+            resTail = insert(resTail, mover1->coeff, mover1->deg);
             mover1 = mover1->next;
-        } else {
-            resTail = insertNode(resTail, mover2->coeff, mover2->degree);
+        }else {
+            resTail = insert(resTail, mover2->coeff,mover2->deg);
             mover2 = mover2->next;
         }
-    } while (mover1 != head1 && mover2 != head2);
-
-    while (mover1 != head1) {
-        resTail = insertNode(resTail, mover1->coeff, mover1->degree);
+    }while(mover1 != head1 && mover2 != head2);
+    while(mover1!= head1){
+        resTail = insert(resTail, mover1->coeff, mover1->deg);
         mover1 = mover1->next;
     }
-    while (mover2 != head2) {
-        resTail = insertNode(resTail, mover2->coeff, mover2->degree);
+    while(mover2!= head2){
+        resTail = insert(resTail, mover2->coeff, mover2->deg);
         mover2 = mover2->next;
     }
-    return resTail->next;
+    return resTail ? resTail->next : NULL;
 }
-
-int main() {
+int main(){
     int n1, n2;
-    scanf("%d", &n1);
-    Poly head1 = inputPoly(n1);
-    scanf("%d", &n2);
-    Poly head2 = inputPoly(n2);
-
-    displayPoly(head1);
-    displayPoly(head2);
-
-    Poly resultHead = addPoly(head1, head2);
-    displayPoly(resultHead);
-
+    scanf("%d",&n1);
+    Poly head1 = input(n1);
+    scanf("%d",&n2);
+    Poly head2 = input(n2);
+    display(head1);
+    display(head2);
+    Poly resHead = add(head1,head2);
+    display(resHead);
     return 0;
 }
