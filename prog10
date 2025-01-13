@@ -1,110 +1,87 @@
 #include<stdio.h>
 #include<stdlib.h>
-struct node {
-	int data;
-	struct node *left, *right;
+struct Node{
+int coeff, degree;
+struct Node* next;
 };
-  
-typedef struct node *BSTNODE;
-
-BSTNODE newNodeInBST(int item) {
-	BSTNODE temp =  (BSTNODE)malloc(sizeof(struct node));
-	temp->data = item;
-	temp->left = temp->right = NULL;
-	return temp;
+struct Node* createNode(int coeff, int degree){
+	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+	newNode->coeff = coeff;
+	newNode->degree = degree;
+	newNode->next = NULL;
+	return newNode;
 }
-  
-void inorderInBST(BSTNODE root) {
-	if(root != NULL){
-		inorderInBST(root->left);
-		printf("%d ", root->data);
-		inorderInBST(root->right);
+struct Node* insertNode(struct Node* tail, int coeff, int degree){
+	struct Node* newNode = createNode(coeff, degree);
+	if(tail == NULL){
+		newNode->next = newNode;
+		return newNode;
 	}
+	struct Node* head = tail->next;
+	tail->next = newNode;
+	newNode->next = head;
+	tail = newNode;
+	return tail;
 }
-void preorderInBST(BSTNODE root) {
-	if(root != NULL){
-		printf("%d ", root->data);
-		preorderInBST(root->left);
-		preorderInBST(root->right);
+struct Node* inputPoly(int n){
+	int coeff, degree;
+	struct Node* head = NULL;
+	struct Node* tail = NULL;
+	scanf("%d %d",&coeff,&degree);
+	tail = insertNode(tail, coeff, degree);
+	head = tail;
+	for(int i=1; i<n ;i++){
+		scanf("%d %d",&coeff, &degree);
+		tail = insertNode(tail, coeff, degree);
 	}
+	return head;
 }
-void postorderInBST(BSTNODE root) {
-	if(root != NULL){
-		postorderInBST(root->left);
-		postorderInBST(root->right);
-		printf("%d ",root->data);
-	}
-}
-BSTNODE insertNodeInBST(BSTNODE node, int ele) {
-	if(node == NULL){
-		printf("Successfully inserted.\n");
-		return newNodeInBST(ele);
-	}
-	if(node->data > ele) node->left = insertNodeInBST(node->left, ele);
-	else if(node->data < ele) node->right = insertNodeInBST(node->right, ele);
-	return node;
-}
-
-BSTNODE searchNodeInBST(BSTNODE root, int ele) {
-	if(root == NULL) return NULL;
-	if(root->data == ele) return root;
-	else if(root->data > ele) return searchNodeInBST(root->left, ele);
-	else if(root->data < ele) return searchNodeInBST(root->right, ele);
-	return NULL;
-}
-
-void main() {
-	int x, op;
-	BSTNODE root = NULL;
-	while(1) {
-		printf("1.Insert 2.Inorder Traversal 3.Preorder Traversal 4.Postorder Traversal 5.Search an element 6.Exit\n");
-		printf("Enter your option: ");
-		scanf("%d", &op);
-		switch(op) {
-			case 1:	printf("Enter an element to be inserted : ");
-					scanf("%d", &x);
-					root = insertNodeInBST(root,x);
-					break;
-			case 2:
-					if(root == NULL) {
-						printf("Binary Search Tree is empty.\n");
-					}
-					else {
-						printf("Elements of the BST (in-order traversal): ");
-						inorderInBST(root);
-						printf("\n");
-					}
-					break;
-			case 3:
-					if(root == NULL) {
-						printf("Binary Search Tree is empty.\n");
-					}
-					else {
-						printf("Elements of the BST (pre-order traversal): ");
-						preorderInBST(root);
-						printf("\n");
-						}
-					break;
-			case 4:
-					if(root == NULL) {
-						printf("Binary Search Tree is empty.\n");
-					}
-					else {
-						printf("Elements of the BST (post-order traversal): ");
-						postorderInBST(root);
-						printf("\n");
-						}
-					break;
-			case 5: 
-					printf("Enter an element to be searched : ");
-					scanf("%d", &x);
-					if( searchNodeInBST(root,x) == NULL) 
-						printf("Element not found in the binary search tree.\n");
-					else
-						printf("Element found in the binary search tree.\n");
-					break;
-			case 6:
-					exit(0);
+void displayPoly(struct Node* head){
+	if(head != NULL){
+		printf("%dx^%d", head->coeff,head->degree);
+		struct Node* mover = head->next;
+		while(mover != head){
+			printf(" + %dx^%d", mover->coeff, mover->degree);
+			mover = mover->next;
 		}
 	}
+	printf("\n");
+}
+struct Node* addPoly(struct Node* head1, struct Node* head2){
+	struct Node* mover1 = head1->next;
+	struct Node* mover2 = head2->next;
+
+	struct Node* resHead = NULL;
+	struct Node* resTail = NULL;
+	resTail = insertNode(resTail, head1->coeff + head2->coeff, head1->degree);
+	resHead = resTail;
+	while(mover1 != head1 && mover2 != head2){
+		if(mover1->degree == mover2->degree){
+			resTail = insertNode(resTail, mover1->coeff + mover2->coeff,mover1->degree);
+			mover1 = mover1->next;
+			mover2 = mover2->next;
+		}else{
+			if(mover1->degree > mover2->degree){
+				resTail = insertNode(resTail, mover1->coeff, mover1->degree);
+			mover1 = mover1->next;	
+			}else{
+				resTail = insertNode(resTail, mover2->coeff, mover2->degree);
+				mover2 = mover2->next;
+			}
+		}
+	}
+	return resHead;
+}
+int main(){
+	int n1;
+	scanf("%d",&n1);
+	struct Node* head1 = inputPoly(n1);
+	int n2;
+	scanf("%d",&n2);
+	struct Node* head2 = inputPoly(n2);
+	displayPoly(head1);
+	displayPoly(head2);
+	struct Node* resultHead = addPoly(head1, head2);
+	displayPoly(resultHead);
+	return 0;
 }
